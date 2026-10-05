@@ -51,12 +51,17 @@ node -v   # should print v22.x
 ```
 
 ### 4. Put the NexaTelix code on the server
-**Easiest:** ask Claude to push the code to a **private GitHub repo**, then:
+The code is already in your **private** GitHub repo: **`https://github.com/mulaniom2003/nexatelix`** (branch `master`).
+Because it's private, the clone needs a one-time login (a token, not your GitHub password). On the VPS:
 ```bash
-git clone https://github.com/<you>/nexatelix.git /opt/nexatelix
+# First make a token: github.com -> Settings -> Developer settings ->
+# Personal access tokens -> Tokens (classic) -> Generate new token,
+# tick the "repo" box, Generate, and copy it.
+git clone https://github.com/mulaniom2003/nexatelix.git /opt/nexatelix
+# Username = mulaniom2003    Password = paste the token
 cd /opt/nexatelix
 ```
-(Or upload the folder with WinSCP, skipping `node_modules` and `.next`.)
+(Alternative, no token: upload the folder with WinSCP, skipping `node_modules` and `.next`.)
 
 ### 5. Add your keys
 ```bash
