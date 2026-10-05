@@ -91,7 +91,7 @@ export default async function AdminUser({ params }: { params: Promise<{ id: stri
                     <td className="num">
                       <form action={assignRoute} className="inline-form" style={{ justifyContent: "flex-end" }}>
                         <input type="hidden" name="user_id" value={u.id} /><input type="hidden" name="route_id" value={r.id} />
-                        <input name="price" type="number" step="0.0001" min={0} className="input mono" defaultValue={custom ?? ""} placeholder="default" aria-label="Client price" style={{ maxWidth: 120, height: 38 }} />
+                        <input name="price" type="number" step="0.0001" min={0} className="input mono" defaultValue={custom != null ? String(custom) : ""} placeholder="default" aria-label="Client price" style={{ maxWidth: 120, height: 38 }} />
                         <button className="btn btn-ghost btn-sm" type="submit">Save</button>
                       </form>
                     </td>

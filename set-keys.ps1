@@ -3,7 +3,7 @@ $ErrorActionPreference = "Continue"
 Set-Location -LiteralPath $PSScriptRoot
 $Host.UI.RawUI.WindowTitle = "NexaTelix - set keys"
 
-function Ask([string]$label, [string]$hint, [bool]$secret) {
+function Ask([string]$label, [string]$hint, [bool]$secret, [bool]$optional = $false) {
   Write-Host ""
   Write-Host "  $label" -ForegroundColor Green
   if ($hint) { Write-Host "  $hint" -ForegroundColor DarkGray }
@@ -16,6 +16,7 @@ function Ask([string]$label, [string]$hint, [bool]$secret) {
     }
     $v = $v.Trim()
     if ($v) { return $v }
+    if ($optional) { return "" }
     Write-Host "  Nothing pasted, try again." -ForegroundColor Yellow
   }
 }
@@ -26,8 +27,8 @@ Write-Host "  NexaTelix keys. Open Supabase > your project > Project Settings > 
 $sbUrl  = Ask "1/5  Supabase Project URL"            "Looks like https://abcdxyz.supabase.co" $false
 $anon   = Ask "2/5  Supabase anon / publishable key"   "The public key (anon or sb_publishable_...)" $true
 $svc    = Ask "3/5  Supabase service_role / secret key" "The secret one (service_role or sb_secret_...). Never share it." $true
-$upUrl  = Ask "4/5  Your partner panel address"          "Just the website address of the panel, e.g. https://panel.example.com" $false
-$upKey  = Ask "5/5  Your partner API key"                "From the partner panel: API tab > + New key" $true
+$upUrl  = Ask "4/5  Partner panel address (optional - press Enter to skip for now)" "Leave blank to launch the site now; connect sending later" $false $true
+$upKey  = Ask "5/5  Partner API key (optional - press Enter to skip for now)"      "Leave blank to launch now; connect sending later" $true $true
 
 $bytes = New-Object byte[] 24
 [Security.Cryptography.RandomNumberGenerator]::Create().GetBytes($bytes)
@@ -64,6 +65,7 @@ if ($LASTEXITCODE -ne 0) {
 Write-Host "  Saving keys to Vercel..." -ForegroundColor White
 $tmp = Join-Path $env:TEMP "nx-env.txt"
 foreach ($k in $vars.Keys) {
+  if (-not $vars[$k]) { Write-Host "    skip  $k (blank for now)" -ForegroundColor DarkGray; continue }
   [IO.File]::WriteAllText($tmp, $vars[$k])
   cmd /c "npx --yes vercel@latest env rm $k production --yes >nul 2>&1"
   cmd /c "npx --yes vercel@latest env add $k production < `"$tmp`" >nul 2>&1"

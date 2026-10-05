@@ -12,6 +12,22 @@ const nextConfig: NextConfig = {
     // Recipient lists are sent with the campaign form (≈ 250K numbers max).
     serverActions: { bodySizeLimit: "4mb" },
   },
+  async rewrites() {
+    return [
+      { source: "/portal", destination: "/app" },
+      { source: "/portal/login", destination: "/login" },
+      { source: "/portal/send", destination: "/app/sms" },
+      { source: "/portal/rcs/send", destination: "/app/rcs" },
+      { source: "/portal/rcs/history", destination: "/app/rcs/history" },
+      { source: "/portal/coverage", destination: "/app/coverage" },
+      { source: "/portal/history", destination: "/app/reports" },
+      { source: "/portal/reports", destination: "/app/reports" },
+      { source: "/portal/invoices", destination: "/app/invoices" },
+      { source: "/portal/api", destination: "/app/api" },
+      { source: "/portal/wallet", destination: "/app/wallet" },
+      { source: "/portal/:path*", destination: "/app/:path*" },
+    ];
+  },
 };
 
 export default nextConfig;

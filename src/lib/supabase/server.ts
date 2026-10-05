@@ -6,8 +6,13 @@ export const supabaseConfigured = Boolean(
   process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 );
 
+import { createMockClient } from "../mock-db";
+
 /** Per-request client bound to the user's session cookies (respects RLS). */
 export async function createClient() {
+  if (!supabaseConfigured) {
+    return createMockClient() as any;
+  }
   const cookieStore = await cookies();
   return createServerClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!, {
     cookies: {
@@ -27,6 +32,9 @@ export async function createClient() {
 
 /** Service-role client. SERVER ONLY. Bypasses RLS — always authorize first. */
 export function createAdminClient() {
+  if (!supabaseConfigured || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    return createMockClient() as any;
+  }
   return createJsClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!, {
     auth: { persistSession: false, autoRefreshToken: false },
   });

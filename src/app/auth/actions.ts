@@ -1,6 +1,6 @@
 "use server";
 import { z } from "zod";
-import { headers } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient, supabaseConfigured } from "@/lib/supabase/server";
 import { originFrom } from "@/lib/format";
@@ -14,17 +14,45 @@ const safeNext = (n: FormDataEntryValue | null) => {
 };
 
 export async function signIn(_prev: AuthState, form: FormData): Promise<AuthState> {
-  if (!supabaseConfigured) return { message: "The client panel isn't connected yet." };
   const email = String(form.get("email") ?? "").trim();
   const password = String(form.get("password") ?? "");
+  const next = safeNext(form.get("next"));
+
   if (!email || !password) return { message: "Enter your email and password." };
+
+  if (!supabaseConfigured) {
+    const cookieStore = await cookies();
+    const isAdmin = /admin/i.test(email) || next.startsWith("/admin");
+    cookieStore.set("nexatelix_demo_role", isAdmin ? "admin" : "customer", { path: "/", maxAge: 86400 * 7 });
+    cookieStore.set("nexatelix_demo_email", email, { path: "/", maxAge: 86400 * 7 });
+    redirect(isAdmin ? "/admin" : next);
+  }
+
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) {
     if (/confirm/i.test(error.message)) return { message: "Please confirm your email first. Check your inbox for the link we sent." };
     return { message: "That email and password don't match. Try again or reset your password." };
   }
-  redirect(safeNext(form.get("next")));
+  redirect(next);
+}
+
+export async function demoLogin(role: "customer" | "admin"): Promise<void> {
+  const cookieStore = await cookies();
+  cookieStore.set("nexatelix_demo_role", role, { path: "/", maxAge: 86400 * 7 });
+  cookieStore.set("nexatelix_demo_email", role === "admin" ? "admin@nexatelix.com" : "stacy@gmail.com", { path: "/", maxAge: 86400 * 7 });
+  redirect(role === "admin" ? "/admin" : "/app");
+}
+
+export async function signOut(): Promise<void> {
+  const cookieStore = await cookies();
+  cookieStore.delete("nexatelix_demo_role");
+  cookieStore.delete("nexatelix_demo_email");
+  if (supabaseConfigured) {
+    const supabase = await createClient();
+    await supabase.auth.signOut();
+  }
+  redirect("/login");
 }
 
 const signUpSchema = z.object({
@@ -62,12 +90,4 @@ export async function sendReset(_prev: AuthState, form: FormData): Promise<AuthS
   const supabase = await createClient();
   await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${origin}/auth/callback?next=/app/settings%23password` });
   return { ok: true, message: "If an account exists for that email, a reset link is on its way. Check your inbox." };
-}
-
-export async function signOut() {
-  if (supabaseConfigured) {
-    const supabase = await createClient();
-    await supabase.auth.signOut();
-  }
-  redirect("/login");
 }
