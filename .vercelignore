@@ -1,0 +1,8 @@
+node_modules
+.next
+*.bat
+publish-log.txt
+tsconfig.tsbuildinfo
+.env*
+!.env.example
+*.ps1
