@@ -2,6 +2,7 @@
 import { revalidatePath } from "next/cache";
 import { requireAdmin } from "@/lib/auth";
 import { createAdminClient } from "@/lib/supabase/server";
+import { site } from "@/lib/site";
 import type { ActionState } from "@/app/app/actions";
 
 const str = (f: FormData, k: string) => String(f.get(k) ?? "").trim();
@@ -78,7 +79,16 @@ export async function addClient(_prev: ActionState, form: FormData): Promise<Act
   const uid = data.user!.id;
   await db.from("profiles").update({ full_name: full_name || null, company: company || null, role: "customer" }).eq("id", uid);
   done();
-  return { ok: true, message: `Client created — ${email} can log in now with the password you set.` };
+  const creds = [
+    `NexaTelix — your account login`,
+    `Website: ${site.url}`,
+    `Login page: ${site.url}/login`,
+    `Email: ${email}`,
+    `Password: ${password}`,
+    ``,
+    `Log in at the login page above. You can change your password in Settings after signing in.`,
+  ].join("\n");
+  return { ok: true, message: "Client created. Copy the login details below and send them to your client.", secret: creds };
 }
 
 /* ── Routes ────────────────────────────────────────────────────── */
@@ -142,7 +152,24 @@ export async function adjustBalance(_prev: ActionState, form: FormData): Promise
   });
   if (error) return { message: /insufficient|check constraint/i.test(error.message) ? "That would take the balance below zero." : error.message };
   done();
-  return { ok: true, message: `${amount > 0 ? "Added" : "Deducted"} $${Math.abs(amount).toFixed(2)} ${amount > 0 ? "to" : "from"} the ${w.toUpperCase()} wallet.` };
+  return { ok: true, message: `${amount > 0 ? "Added" : "Deducted"} €${Math.abs(amount).toFixed(2)} ${amount > 0 ? "to" : "from"} the ${w.toUpperCase()} wallet.` };
+}
+
+/** Quick top-up used on the Clients list (plain form, no inline state). */
+export async function creditClient(form: FormData) {
+  await requireAdmin();
+  const amount = Number(str(form, "amount"));
+  if (!amount || !Number.isFinite(amount)) return;
+  const w = wallet(str(form, "wallet"));
+  await createAdminClient().rpc("wallet_move", {
+    p_user: str(form, "user_id"),
+    p_wallet: w,
+    p_amount: amount,
+    p_kind: "adjustment",
+    p_reference: null,
+    p_note: amount > 0 ? "Credit added" : "Deduction",
+  });
+  done();
 }
 
 export async function setUserFlag(form: FormData) {
