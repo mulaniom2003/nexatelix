@@ -61,7 +61,6 @@ export function Footer() {
             </p>
             <div style={{ display: "flex", gap: 8, marginTop: 24, flexWrap: "wrap" }}>
               <a className="tag" href={links.telegram} target="_blank" rel="noreferrer">Telegram</a>
-              <a className="tag" href={links.whatsapp} target="_blank" rel="noreferrer">WhatsApp</a>
               <a className="tag" href={links.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
             </div>
           </div>
@@ -87,7 +86,6 @@ export function Footer() {
           <div>
             <h4>Reach us</h4>
             <ul>
-              <li><a href={links.whatsapp} target="_blank" rel="noreferrer">WhatsApp · {site.contact.whatsappDisplay}</a></li>
               <li><a href={links.telegramSupport} target="_blank" rel="noreferrer">Telegram · @{site.contact.telegramSupport}</a></li>
               <li><a href={links.telegram} target="_blank" rel="noreferrer">Channel · @{site.contact.telegramChannel}</a></li>
               <li><a href={links.sales}>{site.contact.salesEmail}</a></li>

@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useActionState } from "react";
-import { signIn, signUp, sendReset, demoLogin, type AuthState } from "@/app/auth/actions";
+import { signIn, signUp, sendReset, type AuthState } from "@/app/auth/actions";
 import { SubmitBtn } from "../Btn";
 
 function Alert({ state }: { state: AuthState }) {
@@ -17,45 +17,18 @@ export function LoginForm({ next, notice }: { next?: string; notice?: string }) 
   const [state, action, pending] = useActionState<AuthState, FormData>(signIn, notice ? { message: notice } : null);
   return (
     <div className="auth-form-wrap">
-      <div style={{ background: "rgba(198, 255, 61, 0.06)", border: "1px solid rgba(198, 255, 61, 0.2)", borderRadius: "14px", padding: "16px 18px", marginBottom: "22px" }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "10px" }}>
-          <span style={{ fontSize: "11px", fontFamily: "var(--f-mono)", textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--signal)" }}>
-            Instant Access (Demo Mode)
-          </span>
-          <span style={{ fontSize: "11px", color: "var(--mute)" }}>Zero setup needed</span>
-        </div>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
-          <button
-            type="button"
-            onClick={() => demoLogin("customer")}
-            className="btn btn-signal btn-sm"
-            style={{ width: "100%", justifyContent: "center", height: "38px", fontSize: "13px" }}
-          >
-            Client Portal (Stacy) →
-          </button>
-          <button
-            type="button"
-            onClick={() => demoLogin("admin")}
-            className="btn btn-ghost btn-sm"
-            style={{ width: "100%", justifyContent: "center", height: "38px", fontSize: "13px" }}
-          >
-            Admin Suite →
-          </button>
-        </div>
-      </div>
-
       <form action={action} className="auth-form">
         <input type="hidden" name="next" value={next ?? "/app"} />
         <div className="field">
           <label htmlFor="li-email">Email</label>
-          <input id="li-email" name="email" type="email" defaultValue="stacy@gmail.com" className="input" autoComplete="email" required />
+          <input id="li-email" name="email" type="email" className="input" autoComplete="email" required />
         </div>
         <div className="field">
           <div className="field-row">
             <label htmlFor="li-pass">Password</label>
             <Link href="/forgot" className="link-u muted" style={{ fontSize: 13 }}>Forgot password?</Link>
           </div>
-          <input id="li-pass" name="password" type="password" defaultValue="hfbdGfH3WIiMCGHS" className="input" autoComplete="current-password" required />
+          <input id="li-pass" name="password" type="password" className="input" autoComplete="current-password" required />
         </div>
         <Alert state={state} />
         <SubmitBtn pending={pending} block>Log in</SubmitBtn>

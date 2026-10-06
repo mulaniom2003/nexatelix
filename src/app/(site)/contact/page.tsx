@@ -7,7 +7,6 @@ import { links, site } from "@/lib/site";
 export const metadata: Metadata = { title: "Contact", description: `Talk to the ${site.name} team about RCS, SMS, WhatsApp or Telegram messaging.` };
 
 const ways = [
-  { ico: Icon.whatsapp, t: "WhatsApp", s: site.contact.whatsappDisplay, href: links.whatsapp },
   { ico: Icon.telegram, t: "Telegram", s: `@${site.contact.telegramSupport}`, href: links.telegramSupport },
   { ico: Icon.mail, t: "Sales", s: site.contact.salesEmail, href: links.sales },
   { ico: Icon.life, t: "Support", s: site.contact.supportEmail, href: links.support },
@@ -20,7 +19,7 @@ const formReady = Boolean(process.env.RESEND_API_KEY && process.env.CONTACT_TO);
 export default function Contact() {
   return (
     <>
-      <PageHero index="08" eyebrow="Contact" title={<>Let&apos;s <em>talk</em> traffic.</>} lead="Tell us what you send and where. Message us on WhatsApp or Telegram and a person replies, usually within a few hours." />
+      <PageHero index="08" eyebrow="Contact" title={<>Let&apos;s <em>talk</em> traffic.</>} lead="Tell us what you send and where. Message us on Telegram and a person replies, usually within a few hours." />
       <section className="section" style={{ paddingTop: 0 }}>
         <div className={`wrap ${formReady ? "split" : ""}`} style={{ alignItems: "start", maxWidth: formReady ? undefined : 860 }}>
           {formReady && <ContactForm />}

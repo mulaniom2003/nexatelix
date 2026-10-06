@@ -38,7 +38,7 @@ export const legal: Record<string, { title: string; updated: string; body: React
         <h2>Sharing</h2>
         <p>We share recipient numbers and message content with carriers and messaging platforms only to deliver your messages. We never sell personal data.</p>
         <h2>Your rights</h2>
-        <p>To access, correct or delete your data, email <a href={`mailto:${site.contact.supportEmail}`}>{site.contact.supportEmail}</a>, or message us on Telegram at <a href={`https://t.me/${site.contact.telegramSupport}`}>@{site.contact.telegramSupport}</a> or on WhatsApp at {site.contact.whatsappDisplay}.</p>
+        <p>To access, correct or delete your data, email <a href={`mailto:${site.contact.supportEmail}`}>{site.contact.supportEmail}</a>, or message us on Telegram at <a href={`https://t.me/${site.contact.telegramSupport}`}>@{site.contact.telegramSupport}</a>.</p>
       </>
     ),
   },

@@ -14,8 +14,6 @@ export const site = {
     telegramSupport: "MulaniOm", // direct chat
     salesEmail: "sales@nexatelix.com", // forwarded by Porkbun
     supportEmail: "support@nexatelix.com", // forwarded by Porkbun
-    whatsapp: "919879993043", // digits only, with country code
-    whatsappDisplay: "+91 98799 93043",
     linkedin: "https://www.linkedin.com/company/nexatelix/",
   },
   // Facts about the product (not traffic claims), shown under the homepage hero.
@@ -32,7 +30,6 @@ export const links = {
   telegramSupport: `https://t.me/${site.contact.telegramSupport}`,
   sales: `mailto:${site.contact.salesEmail}`,
   support: `mailto:${site.contact.supportEmail}`,
-  whatsapp: `https://wa.me/${site.contact.whatsapp}`,
   linkedin: site.contact.linkedin,
 };
 
