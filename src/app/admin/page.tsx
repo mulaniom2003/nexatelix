@@ -17,7 +17,7 @@ export default async function AdminHome() {
   const [prov, clients, wallets, todayC, monthC, topups, senders] = await Promise.all([
     providerBalance(),
     db.from("profiles").select("id", { count: "exact", head: true }),
-    db.from("wallets").select("balance, rcs_balance"),
+    db.from("wallets").select("balance"),
     db.rpc("msg_country_summary", { p_user: null, p_from: istStart(today).toISOString(), p_to: istStart(addDays(today, 1)).toISOString() }),
     db.rpc("msg_country_summary", { p_user: null, p_from: istStart(monthStart).toISOString(), p_to: istStart(addDays(today, 1)).toISOString() }),
     db.from("topups").select("id", { count: "exact", head: true }).eq("status", "pending"),
@@ -26,7 +26,7 @@ export default async function AdminHome() {
   const sum = (rows: Ctry[] | null, k: keyof Ctry) => (rows ?? []).reduce((s, r) => s + Number(r[k]), 0);
   const t = (todayC.data ?? []) as Ctry[];
   const m = (monthC.data ?? []) as Ctry[];
-  const owed = (wallets.data ?? []).reduce((s, w) => s + Number(w.balance) + Number(w.rcs_balance), 0);
+  const owed = (wallets.data ?? []).reduce((s, w) => s + Number(w.balance), 0);
 
   return (
     <>

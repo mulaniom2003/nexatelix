@@ -93,8 +93,8 @@ export async function requestTopup(_prev: ActionState, form: FormData): Promise<
   const { user } = await requireUser();
   const min = Number(await getSetting("min_topup_usd", 10));
   const schema = z.object({
-    amount: z.coerce.number().min(min, `The minimum top-up is $${min}.`).max(100000, "That amount is too large. Message us for large top-ups."),
-    wallet: z.enum(["sms", "rcs"]),
+    amount: z.coerce.number().min(min, `The minimum top-up is €${min}.`).max(100000, "That amount is too large. Message us for large top-ups."),
+    wallet: z.enum(["sms", "rcs"]).default("sms"),
     method: z.enum(["upi", "bank", "usdt"]),
     reference: z.string().trim().min(4, "Enter the UTR or transaction ID so we can match your payment.").max(120),
   });

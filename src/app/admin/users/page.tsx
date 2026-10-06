@@ -5,6 +5,7 @@ import { AddClientForm } from "@/components/panel/AddClientForm";
 import { requireAdmin } from "@/lib/auth";
 import { creditClient } from "../actions";
 import { createAdminClient } from "@/lib/supabase/server";
+import { providerBalance } from "@/lib/upstream";
 import { money } from "@/lib/format";
 
 export const metadata: Metadata = { title: "Clients" };
@@ -13,23 +14,42 @@ export default async function AdminUsers({ searchParams }: { searchParams: Promi
   await requireAdmin();
   const { q = "" } = await searchParams;
   const db = createAdminClient();
-  let query = db.from("profiles").select("id, email, full_name, company, role, suspended, created_at, wallets(balance, rcs_balance)").order("created_at", { ascending: false }).limit(300);
+  const platform = await providerBalance();
+
+  let query = db.from("profiles").select("id, email, full_name, company, role, suspended, created_at, wallets(balance)").order("created_at", { ascending: false }).limit(300);
   const term = q.trim().replace(/[%,()]/g, "");
   if (term) query = query.or(`email.ilike.%${term}%,full_name.ilike.%${term}%,company.ilike.%${term}%`);
   const { data } = await query;
   const rows = data ?? [];
 
-  // Lifetime spend per client = sum of their sending charges (negative "campaign" ledger entries).
+  // Lifetime spend per client = sum of their sending charges ("campaign" ledger entries).
   const spent = new Map<string, number>();
   const ids = rows.map((u) => u.id);
   if (ids.length) {
     const { data: txs } = await db.from("transactions").select("user_id, amount").eq("kind", "campaign").in("user_id", ids);
     (txs ?? []).forEach((t) => spent.set(t.user_id as string, (spent.get(t.user_id as string) ?? 0) + Math.abs(Number(t.amount))));
   }
+  const clientTotal = rows.reduce((s, u) => {
+    const w = (Array.isArray(u.wallets) ? u.wallets[0] : u.wallets) as { balance: number } | null;
+    return s + Number(w?.balance ?? 0);
+  }, 0);
 
   return (
     <>
-      <PageHead title="Clients" sub="Each client's prepaid wallet and what they've spent. Add funds after they pay you. Your own supplier balance is on the Overview." />
+      <PageHead title="Clients" sub="Each client's prepaid balance and what they've spent. Add funds after they pay you." />
+
+      <div className="kpis" style={{ marginBottom: 18 }}>
+        <div className="kpi hl">
+          <span className="lbl">Your supplier balance</span>
+          <span className="val">{platform ? money(platform.balance) : "—"}</span>
+          <span className="hint">Funds on the delivery platform — every send draws from this</span>
+        </div>
+        <div className="kpi">
+          <span className="lbl">Client balances (total)</span>
+          <span className="val">{money(clientTotal)}</span>
+          <span className="hint">{rows.length} client{rows.length === 1 ? "" : "s"}</span>
+        </div>
+      </div>
 
       <section className="pcard" style={{ marginBottom: 16, maxWidth: 680 }}>
         <div style={{ fontWeight: 600, marginBottom: 12 }}>Add a client</div>
@@ -48,15 +68,14 @@ export default async function AdminUsers({ searchParams }: { searchParams: Promi
               <thead>
                 <tr>
                   <th>Client</th>
-                  <th className="num">SMS balance</th>
-                  <th className="num">RCS balance</th>
+                  <th className="num">Balance</th>
                   <th className="num">Spent</th>
                   <th>Add funds</th>
                 </tr>
               </thead>
               <tbody>
                 {rows.map((u) => {
-                  const w = (Array.isArray(u.wallets) ? u.wallets[0] : u.wallets) as { balance: number; rcs_balance: number } | null;
+                  const w = (Array.isArray(u.wallets) ? u.wallets[0] : u.wallets) as { balance: number } | null;
                   return (
                     <tr key={u.id}>
                       <td>
@@ -66,16 +85,11 @@ export default async function AdminUsers({ searchParams }: { searchParams: Promi
                         {u.suspended && <span className="badge b-rejected" style={{ marginLeft: 6 }}>Suspended</span>}
                       </td>
                       <td className="num mono-num">{money(Number(w?.balance ?? 0))}</td>
-                      <td className="num mono-num">{money(Number(w?.rcs_balance ?? 0))}</td>
                       <td className="num mono-num">{money(spent.get(u.id) ?? 0)}</td>
                       <td>
                         <form action={creditClient} className="inline-form" style={{ gap: 6, flexWrap: "nowrap" }}>
                           <input type="hidden" name="user_id" value={u.id} />
-                          <input name="amount" type="number" step="0.01" min="0.01" placeholder="25" className="input" aria-label="Amount to add" required style={{ width: 84 }} />
-                          <select name="wallet" className="select" defaultValue="sms" aria-label="Wallet" style={{ width: 74 }}>
-                            <option value="sms">SMS</option>
-                            <option value="rcs">RCS</option>
-                          </select>
+                          <input name="amount" type="number" step="0.01" min="0.01" placeholder="€ amount" className="input" aria-label="Amount to add" required style={{ width: 110 }} />
                           <button className="btn btn-signal btn-sm" type="submit">Add</button>
                         </form>
                       </td>

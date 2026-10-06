@@ -21,7 +21,7 @@ export async function approveTopup(form: FormData) {
     .eq("status", "pending")
     .select("id, user_id, amount, wallet, method, reference")
     .maybeSingle();
-  if (t) await db.rpc("wallet_move", { p_user: t.user_id, p_wallet: wallet(t.wallet), p_amount: Number(t.amount), p_kind: "topup", p_reference: t.id, p_note: `${t.method.toUpperCase()} ${t.reference ?? ""}`.trim() });
+  if (t) await db.rpc("wallet_move", { p_user: t.user_id, p_wallet: "sms", p_amount: Number(t.amount), p_kind: "topup", p_reference: t.id, p_note: `${t.method.toUpperCase()} ${t.reference ?? ""}`.trim() });
   done();
 }
 
@@ -141,10 +141,9 @@ export async function adjustBalance(_prev: ActionState, form: FormData): Promise
   await requireAdmin();
   const amount = Number(str(form, "amount"));
   if (!amount || !Number.isFinite(amount)) return { message: "Enter an amount, e.g. 25 to add or -5 to deduct." };
-  const w = wallet(str(form, "wallet"));
   const { error } = await createAdminClient().rpc("wallet_move", {
     p_user: str(form, "user_id"),
-    p_wallet: w,
+    p_wallet: "sms",
     p_amount: amount,
     p_kind: "adjustment",
     p_reference: null,
@@ -152,7 +151,7 @@ export async function adjustBalance(_prev: ActionState, form: FormData): Promise
   });
   if (error) return { message: /insufficient|check constraint/i.test(error.message) ? "That would take the balance below zero." : error.message };
   done();
-  return { ok: true, message: `${amount > 0 ? "Added" : "Deducted"} €${Math.abs(amount).toFixed(2)} ${amount > 0 ? "to" : "from"} the ${w.toUpperCase()} wallet.` };
+  return { ok: true, message: `${amount > 0 ? "Added" : "Deducted"} €${Math.abs(amount).toFixed(2)} ${amount > 0 ? "to" : "from"} the balance.` };
 }
 
 /** Quick top-up used on the Clients list (plain form, no inline state). */
@@ -160,10 +159,9 @@ export async function creditClient(form: FormData) {
   await requireAdmin();
   const amount = Number(str(form, "amount"));
   if (!amount || !Number.isFinite(amount)) return;
-  const w = wallet(str(form, "wallet"));
   await createAdminClient().rpc("wallet_move", {
     p_user: str(form, "user_id"),
-    p_wallet: w,
+    p_wallet: "sms",
     p_amount: amount,
     p_kind: "adjustment",
     p_reference: null,

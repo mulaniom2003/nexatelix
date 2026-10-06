@@ -22,9 +22,9 @@ const items: NavItem[] = [
 
 export default async function ClientLayout({ children }: { children: React.ReactNode }) {
   const { user, profile } = await requireUser();
-  const { data: w } = await (await createClient()).from("wallets").select("balance, rcs_balance").eq("user_id", user.id).single();
+  const { data: w } = await (await createClient()).from("wallets").select("balance").eq("user_id", user.id).single();
   return (
-    <PanelShell area="client" items={items} name={profile.full_name ?? ""} email={profile.email} balance={{ sms: Number(w?.balance ?? 0), rcs: Number(w?.rcs_balance ?? 0) }} isAdmin={profile.role === "admin"}>
+    <PanelShell area="client" items={items} name={profile.full_name ?? ""} email={profile.email} balance={Number(w?.balance ?? 0)} isAdmin={profile.role === "admin"}>
       {children}
     </PanelShell>
   );

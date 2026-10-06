@@ -39,8 +39,7 @@ export default async function AdminUser({ params }: { params: Promise<{ id: stri
       <PageHead title={u.full_name || u.email} sub={<Link href="/admin/users" className="link-u">← All clients</Link>} action={u.suspended ? <span className="badge b-rejected">Suspended</span> : u.role === "admin" ? <span className="tag on">Admin</span> : undefined} />
 
       <div className="kpis">
-        <div className="kpi hl"><span className="lbl">SMS balance</span><span className="val">{money(Number(w?.balance ?? 0))}</span></div>
-        <div className="kpi"><span className="lbl">RCS balance</span><span className="val">{money(Number(w?.rcs_balance ?? 0))}</span></div>
+        <div className="kpi hl"><span className="lbl">Balance</span><span className="val">{money(Number(w?.balance ?? 0))}</span></div>
         <div className="kpi"><span className="lbl">Sent today</span><span className="val">{count(Number(o?.sent_today ?? 0))}</span></div>
         <div className="kpi"><span className="lbl">Sent this month</span><span className="val">{count(Number(o?.sent_month ?? 0))}</span><span className="hint">{count(Number(o?.delivered_all ?? 0))} delivered all-time</span></div>
       </div>
@@ -66,10 +65,7 @@ export default async function AdminUser({ params }: { params: Promise<{ id: stri
           <div className="pcard-head"><h2>Adjust balance</h2></div>
           <ActionForm action={adjustBalance} submit="Apply">
             <input type="hidden" name="user_id" value={u.id} />
-            <div className="form-grid">
-              <div className="field"><label htmlFor="ab-amt">Amount EUR (− to deduct)</label><input id="ab-amt" name="amount" type="number" step="0.0001" className="input" placeholder="25" required /></div>
-              <div className="field"><label htmlFor="ab-w">Wallet</label><select id="ab-w" name="wallet" className="select" defaultValue="sms"><option value="sms">SMS</option><option value="rcs">RCS</option></select></div>
-            </div>
+            <div className="field"><label htmlFor="ab-amt">Amount EUR (− to deduct)</label><input id="ab-amt" name="amount" type="number" step="0.0001" className="input" placeholder="25" required /></div>
             <div className="field"><label htmlFor="ab-note">Note shown to client</label><input id="ab-note" name="note" className="input" placeholder="Welcome credit" /></div>
           </ActionForm>
         </section>

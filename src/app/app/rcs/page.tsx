@@ -14,15 +14,15 @@ export default async function SendRcs() {
   const [routes, { data: senders }, { data: w }] = await Promise.all([
     routesFor(user.id, "rcs"),
     db.from("sender_ids").select("sender").eq("user_id", user.id).eq("channel", "rcs").eq("status", "approved").order("sender"),
-    db.from("wallets").select("rcs_balance").eq("user_id", user.id).single(),
+    db.from("wallets").select("balance").eq("user_id", user.id).single(),
   ]);
   return (
     <>
-      <PageHead title="Send RCS" sub="Text, rich card or carousel · single, bulk or file · separate RCS wallet" />
+      <PageHead title="Send RCS" sub="Text, rich card or carousel · single, bulk or file" />
       <RcsForm
         routes={routes.map((r) => ({ dial_code: r.dial_code, price: r.price, country: r.country, iso: r.iso, assigned: r.assigned }))}
         senders={(senders ?? []).map((s) => s.sender)}
-        balance={Number(w?.rcs_balance ?? 0)}
+        balance={Number(w?.balance ?? 0)}
       />
     </>
   );

@@ -96,7 +96,7 @@ export async function sendMessages(input: SendInput): Promise<SendResult> {
   if (routed.length === 0) return { ok: false, code: 400, error: "None of these numbers are covered by your routes. Check the country codes, or see Coverage." };
 
   const total = round(routed.reduce((s, x) => s + x.route.price * segments, 0));
-  const wallet = input.channel === "rcs" ? "rcs" : "sms";
+  const wallet = "sms"; // single general wallet (the "balance" column) covers all channels
   const label = input.campaignName?.trim() || (routed.length === 1 ? `${input.channel.toUpperCase()} to ${routed[0].to}` : `${input.channel.toUpperCase()} to ${routed.length} numbers`);
 
   // Campaign row for multi-number sends (or when the client names it).
@@ -115,9 +115,9 @@ export async function sendMessages(input: SendInput): Promise<SendResult> {
   if (charge.error) {
     if (campaignId) await db.from("campaigns").delete().eq("id", campaignId);
     if (/insufficient|check constraint/i.test(charge.error.message)) {
-      const { data: w } = await db.from("wallets").select("balance, rcs_balance").eq("user_id", input.userId).single();
-      const bal = Number((wallet === "rcs" ? w?.rcs_balance : w?.balance) ?? 0);
-      return { ok: false, code: 402, error: `This send costs $${total.toFixed(4)} but your ${wallet.toUpperCase()} balance is $${bal.toFixed(2)}. Top up in Wallet.` };
+      const { data: w } = await db.from("wallets").select("balance").eq("user_id", input.userId).single();
+      const bal = Number(w?.balance ?? 0);
+      return { ok: false, code: 402, error: `This send costs €${total.toFixed(4)} but your balance is €${bal.toFixed(2)}. Top up in Wallet.` };
     }
     return { ok: false, code: 503, error: "We couldn't start this send. Please try again." };
   }
@@ -224,7 +224,7 @@ export async function applyDlr(upstreamId: string, rawStatus: string, ts?: strin
   await db.from("messages").update(patch).eq("id", m.id);
 
   if (FINAL_FAIL.includes(status) && !FINAL_FAIL.includes(m.status) && Number(m.price) > 0 && (await getSetting<boolean>("refund_failed", false))) {
-    await db.rpc("wallet_move", { p_user: m.user_id, p_wallet: m.channel, p_amount: Number(m.price), p_kind: "refund", p_reference: m.id, p_note: `Undelivered to ${m.recipient}` });
+    await db.rpc("wallet_move", { p_user: m.user_id, p_wallet: "sms", p_amount: Number(m.price), p_kind: "refund", p_reference: m.id, p_note: `Undelivered to ${m.recipient}` });
     await db.from("messages").update({ price: 0 }).eq("id", m.id);
   }
 

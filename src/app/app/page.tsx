@@ -24,7 +24,6 @@ export default async function Overview() {
         <div className="kpi hl">
           <span className="lbl">Balance (EUR)</span>
           <span className="val">{money(Number(w?.balance ?? 0))}</span>
-          <span className="hint">RCS wallet {money(Number(w?.rcs_balance ?? 0))}</span>
         </div>
         <div className="kpi"><span className="lbl">Sent today</span><span className="val">{count(st?.sent_today ?? 0)}</span></div>
         <div className="kpi"><span className="lbl">Sent this month</span><span className="val">{count(st?.sent_month ?? 0)}</span></div>

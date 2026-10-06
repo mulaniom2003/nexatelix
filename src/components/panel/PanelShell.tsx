@@ -18,7 +18,7 @@ export function PanelShell({
   items: NavItem[];
   name: string;
   email: string;
-  balance?: { sms: number; rcs: number };
+  balance?: number;
   isAdmin?: boolean;
   children: ReactNode;
 }) {
@@ -51,13 +51,10 @@ export function PanelShell({
       </aside>
       <div className="pmain">
         <header className="ptop">
-          {balance ? (
+          {balance != null ? (
             <Link href="/app/wallet" className="pbal" aria-label="Wallet">
-              <span className="muted">SMS</span>
-              <b className="tnum">{money(balance.sms)}</b>
-              <span className="pbal-sep" aria-hidden />
-              <span className="muted">RCS</span>
-              <b className="tnum">{money(balance.rcs)}</b>
+              <span className="muted">Balance</span>
+              <b className="tnum">{money(balance)}</b>
               <span className="pbal-add" aria-hidden>+</span>
             </Link>
           ) : (
