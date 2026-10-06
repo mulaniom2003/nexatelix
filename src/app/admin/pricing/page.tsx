@@ -11,11 +11,11 @@ export default async function AdminPricing() {
   const { data } = await createAdminClient().from("prices").select("*").order("channel").order("sort");
   return (
     <>
-      <PageHead title="Pricing" sub="Rates are in USD per message (per part for SMS). Changes show on the website and in new campaigns straight away." />
+      <PageHead title="Pricing" sub="Rates are in EUR per message (per part for SMS). Changes show on the website and in new campaigns straight away." />
       <section className="pcard">
         <div className="tbl-wrap">
           <table className="tbl">
-            <thead><tr><th>Channel</th><th>Plan name</th><th>Description</th><th>From volume</th><th>Rate (USD)</th><th>Live</th><th /></tr></thead>
+            <thead><tr><th>Channel</th><th>Plan name</th><th>Description</th><th>From volume</th><th>Rate (EUR)</th><th>Live</th><th /></tr></thead>
             <tbody>
               {(data ?? []).map((p) => {
                 const f = `price-${p.id}`;

@@ -24,7 +24,7 @@ export async function GET(req: NextRequest) {
   const to = isYmd(p.get("to")) ? p.get("to")! : today;
 
   const db = createAdminClient();
-  const header = ["time_ist", "channel", "campaign", "sender", "to", "country", "status", "parts", "cost_usd", "error", "message_id", "message"];
+  const header = ["time_ist", "channel", "campaign", "sender", "to", "country", "status", "parts", "cost_eur", "error", "message_id", "message"];
   const lines = [header.join(",")];
   const camps = new Map<string, string>();
   for (let page = 0; page < 100; page++) {

@@ -24,7 +24,7 @@ export default async function AdminRoutes() {
             <input name="country" className="input" placeholder="Country" aria-label="Country" required />
             <input name="iso" className="input" placeholder="ISO (IN)" aria-label="ISO code" maxLength={3} required style={{ flex: "0 1 90px" }} />
             <input name="dial_code" className="input" placeholder="Dial code (91)" aria-label="Dial code" required style={{ flex: "0 1 120px" }} />
-            <input name="price" type="number" step="0.00001" min={0} className="input" placeholder="Price USD" aria-label="Price" required style={{ flex: "0 1 130px" }} />
+            <input name="price" type="number" step="0.00001" min={0} className="input" placeholder="Price EUR" aria-label="Price" required style={{ flex: "0 1 130px" }} />
             <label className="check" style={{ alignSelf: "center" }}><input type="checkbox" name="is_global" defaultChecked /> Global</label>
           </div>
         </ActionForm>
@@ -32,7 +32,7 @@ export default async function AdminRoutes() {
       <section className="pcard">
         <div className="tbl-wrap">
           <table className="tbl" style={{ minWidth: 900 }}>
-            <thead><tr><th>Channel</th><th>Name</th><th>Country</th><th>ISO</th><th>Dial</th><th>Price (USD)</th><th>Global</th><th>Live</th><th /></tr></thead>
+            <thead><tr><th>Channel</th><th>Name</th><th>Country</th><th>ISO</th><th>Dial</th><th>Price (EUR)</th><th>Global</th><th>Live</th><th /></tr></thead>
             <tbody>
               {(data ?? []).map((r) => {
                 const f = `route-${r.id}`;

@@ -25,7 +25,7 @@ export default async function AdminSettings() {
             <div className="field"><label htmlFor="st-bank">Bank details</label><textarea id="st-bank" name="bank" className="textarea" rows={3} defaultValue={clean(pay.bank)} placeholder={"Name: …\nA/C: …\nIFSC: …"} style={{ minHeight: 100 }} /></div>
             <div className="field"><label htmlFor="st-usdt">USDT (TRC20) address</label><input id="st-usdt" name="usdt" className="input" defaultValue={clean(pay.usdt_trc20)} /></div>
             <div className="form-grid">
-              <div className="field"><label htmlFor="st-min">Minimum top-up (USD)</label><input id="st-min" name="min_topup" type="number" min={1} className="input" defaultValue={min} /></div>
+              <div className="field"><label htmlFor="st-min">Minimum top-up (EUR)</label><input id="st-min" name="min_topup" type="number" min={1} className="input" defaultValue={min} /></div>
               <div className="field"><label htmlFor="st-inr">₹ per $1 (shown to clients)</label><input id="st-inr" name="usd_inr" type="number" min={1} step="0.01" className="input" defaultValue={inr} /></div>
             </div>
             <div className="pcard-head" style={{ marginTop: 8 }}><h2>Sending rules</h2></div>

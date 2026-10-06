@@ -35,7 +35,7 @@ export default async function Wallet() {
             <div><span className="eyebrow">SMS balance</span><div className="tnum" style={{ fontSize: 34, letterSpacing: "-0.04em", color: "var(--signal)", marginTop: 6 }}>{money(Number(w?.balance ?? 0))}</div></div>
             <div><span className="eyebrow">RCS balance</span><div className="tnum" style={{ fontSize: 34, letterSpacing: "-0.04em", marginTop: 6 }}>{money(Number(w?.rcs_balance ?? 0))}</div></div>
           </div>
-          <p className="muted" style={{ fontSize: 13 }}>Prepaid{Number(profile.credit_limit ?? 0) > 0 ? ` · credit limit ${money(Number(profile.credit_limit))}` : ""} · $1 ≈ ₹{inr}</p>
+          <p className="muted" style={{ fontSize: 13 }}>Prepaid{Number(profile.credit_limit ?? 0) > 0 ? ` · credit limit ${money(Number(profile.credit_limit))}` : ""} · €1 ≈ ₹{inr}</p>
 
           <div className="pcard-head" style={{ marginTop: 6 }}><h2>Request a top-up</h2></div>
           <dl className="kv" style={{ fontSize: 13.5 }}>
@@ -46,7 +46,7 @@ export default async function Wallet() {
           </dl>
           <ActionForm action={requestTopup} submit="Request" variant="signal">
             <div className="form-grid">
-              <div className="field"><label htmlFor="t-amount">Amount (USD)</label><input id="t-amount" name="amount" type="number" min={min} step="0.01" className="input" placeholder={`${min} or more`} required /></div>
+              <div className="field"><label htmlFor="t-amount">Amount (EUR)</label><input id="t-amount" name="amount" type="number" min={min} step="0.01" className="input" placeholder={`${min} or more`} required /></div>
               <div className="field"><label htmlFor="t-wallet">Add to</label><select id="t-wallet" name="wallet" className="select" defaultValue="sms"><option value="sms">SMS wallet</option><option value="rcs">RCS wallet</option></select></div>
               <div className="field"><label htmlFor="t-method">Paid by</label><select id="t-method" name="method" className="select" defaultValue="upi"><option value="upi">UPI</option><option value="bank">Bank transfer</option><option value="usdt">USDT</option></select></div>
               <div className="field"><label htmlFor="t-ref">UTR / transaction ID</label><input id="t-ref" name="reference" className="input" placeholder="e.g. 412345678901" required /></div>

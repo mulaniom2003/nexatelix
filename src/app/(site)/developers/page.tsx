@@ -70,7 +70,7 @@ print(r.json())  # {"campaign_id": "...", "cost": 0.04, "status": "pending", ...
 const endpoints = [
   ["POST", "/messages", "Send to one or many recipients on any channel."],
   ["GET", "/campaigns/{id}", "Status, counts and cost for a campaign."],
-  ["GET", "/balance", "Current wallet balance in USD."],
+  ["GET", "/balance", "Current wallet balance in EUR."],
   ["GET", "/prices", "Your rate card, per channel and route."],
   ["GET", "/campaigns/{id}/report", "Redirects to a download link for the delivery report, once ready."],
 ];

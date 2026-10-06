@@ -67,7 +67,7 @@ export default async function AdminUser({ params }: { params: Promise<{ id: stri
           <ActionForm action={adjustBalance} submit="Apply">
             <input type="hidden" name="user_id" value={u.id} />
             <div className="form-grid">
-              <div className="field"><label htmlFor="ab-amt">Amount USD (− to deduct)</label><input id="ab-amt" name="amount" type="number" step="0.0001" className="input" placeholder="25" required /></div>
+              <div className="field"><label htmlFor="ab-amt">Amount EUR (− to deduct)</label><input id="ab-amt" name="amount" type="number" step="0.0001" className="input" placeholder="25" required /></div>
               <div className="field"><label htmlFor="ab-w">Wallet</label><select id="ab-w" name="wallet" className="select" defaultValue="sms"><option value="sms">SMS</option><option value="rcs">RCS</option></select></div>
             </div>
             <div className="field"><label htmlFor="ab-note">Note shown to client</label><input id="ab-note" name="note" className="input" placeholder="Welcome credit" /></div>

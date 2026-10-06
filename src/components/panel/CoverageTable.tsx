@@ -22,7 +22,7 @@ export function CoverageTable({ routes }: { routes: R[] }) {
         ) : (
           <div className="tbl-wrap">
             <table className="tbl">
-              <thead><tr><th>Route</th><th>Channel</th><th>Country</th><th className="num">Price (USD)</th></tr></thead>
+              <thead><tr><th>Route</th><th>Channel</th><th>Country</th><th className="num">Price (EUR)</th></tr></thead>
               <tbody>
                 {list.map((r) => (
                   <tr key={r.id}>

@@ -40,11 +40,11 @@ export function tiersFor(prices: PriceRow[], channel: ChannelKey) {
 }
 
 export function usd(n: number, digits = 2) {
-  return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumFractionDigits: digits, maximumFractionDigits: Math.max(digits, 2) }).format(n);
+  return new Intl.NumberFormat("en-US", { style: "currency", currency: "EUR", minimumFractionDigits: digits, maximumFractionDigits: Math.max(digits, 2) }).format(n);
 }
 
 export function rate(n: number) {
-  return "$" + Number(n).toFixed(4).replace(/0+$/, "").replace(/\.$/, ".00");
+  return "€" + Number(n).toFixed(4).replace(/0+$/, "").replace(/\.$/, ".00");
 }
 
 export function num(n: number) {

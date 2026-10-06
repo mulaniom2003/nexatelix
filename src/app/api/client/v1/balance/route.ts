@@ -11,5 +11,5 @@ export async function GET(req: Request) {
     db.from("wallets").select("balance, rcs_balance").eq("user_id", auth.userId).single(),
     db.from("profiles").select("credit_limit").eq("id", auth.userId).single(),
   ]);
-  return NextResponse.json({ balance: Number(data?.balance ?? 0).toFixed(2), rcs_balance: Number(data?.rcs_balance ?? 0).toFixed(2), credit_limit: String(Number(p?.credit_limit ?? 0)), currency: "USD" });
+  return NextResponse.json({ balance: Number(data?.balance ?? 0).toFixed(2), rcs_balance: Number(data?.rcs_balance ?? 0).toFixed(2), credit_limit: String(Number(p?.credit_limit ?? 0)), currency: "EUR" });
 }

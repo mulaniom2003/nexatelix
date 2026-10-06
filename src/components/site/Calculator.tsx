@@ -114,7 +114,7 @@ export function Calculator({ prices }: { prices: PriceRow[] }) {
         </dl>
         <div>
           <Btn href="/signup">Create account</Btn>
-          <p style={{ fontSize: 12.5, color: "var(--mute-2)", marginTop: 14 }}>Prepaid in USD. Final cost depends on the destination country.</p>
+          <p style={{ fontSize: 12.5, color: "var(--mute-2)", marginTop: 14 }}>Prepaid in EUR. Final cost depends on the destination country.</p>
         </div>
       </div>
     </div>

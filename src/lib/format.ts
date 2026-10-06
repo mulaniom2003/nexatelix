@@ -2,7 +2,7 @@
 
 export function money(n: number | string | null | undefined, digits = 2) {
   const v = Number(n ?? 0);
-  return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumFractionDigits: digits, maximumFractionDigits: Math.max(digits, 2) }).format(v);
+  return new Intl.NumberFormat("en-US", { style: "currency", currency: "EUR", minimumFractionDigits: digits, maximumFractionDigits: Math.max(digits, 2) }).format(v);
 }
 
 export function count(n: number | string | null | undefined) {

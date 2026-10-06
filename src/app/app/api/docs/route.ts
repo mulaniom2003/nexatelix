@@ -68,7 +68,7 @@ Statuses: \`submitted\` → \`delivered\` / \`undelivered\` / \`expired\` / \`re
 GET ${B}/balance
 \`\`\`
 
-\`{ "balance": "12.50", "rcs_balance": "40.00", "credit_limit": "0", "currency": "USD" }\`
+\`{ "balance": "12.50", "rcs_balance": "40.00", "credit_limit": "0", "currency": "EUR" }\`
 
 ## 7. RCS
 

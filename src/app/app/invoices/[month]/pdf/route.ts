@@ -68,7 +68,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ mont
   text("DESCRIPTION", M, y, { size: 8, f: bold, color: MUTE });
   text("QTY", 360, y, { size: 8, f: bold, color: MUTE, right: true });
   text("AVG. RATE", 450, y, { size: 8, f: bold, color: MUTE, right: true });
-  text("AMOUNT (USD)", width - M, y, { size: 8, f: bold, color: MUTE, right: true });
+  text("AMOUNT (EUR)", width - M, y, { size: 8, f: bold, color: MUTE, right: true });
   page.drawLine({ start: { x: M, y: y - 8 }, end: { x: width - M, y: y - 8 }, thickness: 0.8, color: LINE });
   y -= 30;
   const lines = [

@@ -6,7 +6,7 @@ export const metadata: Metadata = { title: "FAQ", description: "Answers about ac
 
 const general: [string, string][] = [
   ["How do I get started?", "Create an account, wait for approval (usually a few hours), top up your wallet and send your first campaign from the panel or the API."],
-  ["How do I pay?", "Prepaid in USD. Top up by UPI, bank transfer or USDT. Credit appears once the payment is confirmed."],
+  ["How do I pay?", "Prepaid in EUR. Top up by UPI, bank transfer or USDT. Credit appears once the payment is confirmed."],
   ["Is there a minimum spend?", "No monthly minimum and no setup fee. You only pay for messages you send."],
   ["Do unused credits expire?", "No. Your wallet balance stays available for as long as your account is active."],
   ["What can't I send?", "Anything illegal, deceptive or sent to people who didn't agree to hear from you. See the acceptable use policy for details."],

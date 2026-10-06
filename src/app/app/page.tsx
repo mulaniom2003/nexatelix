@@ -22,7 +22,7 @@ export default async function Overview() {
       <PageHead title={first ? <>Hello, {first}</> : "Overview"} sub="Your account at a glance." action={<div className="btn-row"><Btn href="/app/rcs" variant="ghost" size="sm">Send RCS</Btn><Btn href="/app/sms" variant="signal" size="sm">Send SMS</Btn></div>} />
       <div className="kpis">
         <div className="kpi hl">
-          <span className="lbl">Balance (USD)</span>
+          <span className="lbl">Balance (EUR)</span>
           <span className="val">{money(Number(w?.balance ?? 0))}</span>
           <span className="hint">RCS wallet {money(Number(w?.rcs_balance ?? 0))}</span>
         </div>
