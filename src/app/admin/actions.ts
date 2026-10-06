@@ -54,6 +54,33 @@ export async function addSender(_prev: ActionState, form: FormData): Promise<Act
   return { ok: true, message: `${sender} approved for this client.` };
 }
 
+/* ── Clients ───────────────────────────────────────────────────── */
+export async function addClient(_prev: ActionState, form: FormData): Promise<ActionState> {
+  await requireAdmin();
+  const email = str(form, "email").toLowerCase();
+  const password = str(form, "password");
+  const full_name = str(form, "full_name");
+  const company = str(form, "company");
+  if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return { message: "Enter a valid email address." };
+  if (password.length < 8) return { message: "Password must be at least 8 characters." };
+
+  const db = createAdminClient();
+  const { data, error } = await db.auth.admin.createUser({
+    email,
+    password,
+    email_confirm: true,
+    user_metadata: { full_name, company },
+  });
+  if (error) {
+    if (/registered|exists|already/i.test(error.message)) return { message: "A client with that email already exists." };
+    return { message: error.message };
+  }
+  const uid = data.user!.id;
+  await db.from("profiles").update({ full_name: full_name || null, company: company || null, role: "customer" }).eq("id", uid);
+  done();
+  return { ok: true, message: `Client created — ${email} can log in now with the password you set.` };
+}
+
 /* ── Routes ────────────────────────────────────────────────────── */
 function routeFields(form: FormData) {
   return {

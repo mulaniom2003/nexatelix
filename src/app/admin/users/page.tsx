@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PageHead, Empty } from "@/components/panel/PanelShell";
+import { ActionForm } from "@/components/panel/ActionForm";
 import { requireAdmin } from "@/lib/auth";
+import { addClient } from "../actions";
 import { createAdminClient } from "@/lib/supabase/server";
 import { day, money } from "@/lib/format";
 
@@ -18,6 +20,31 @@ export default async function AdminUsers({ searchParams }: { searchParams: Promi
   return (
     <>
       <PageHead title="Clients" sub="Everyone with an account. Open one to add credit, suspend or make admin." />
+      <section className="pcard" style={{ marginBottom: 16, maxWidth: 680 }}>
+        <div style={{ fontWeight: 600, marginBottom: 12 }}>Add a client</div>
+        <ActionForm action={addClient} submit="Create client">
+          <div className="form-grid">
+            <div className="field">
+              <label htmlFor="ac-email">Email</label>
+              <input id="ac-email" name="email" type="email" className="input" autoComplete="off" required />
+            </div>
+            <div className="field">
+              <label htmlFor="ac-pass">Password</label>
+              <input id="ac-pass" name="password" type="text" className="input" autoComplete="off" minLength={8} required />
+            </div>
+          </div>
+          <div className="form-grid">
+            <div className="field">
+              <label htmlFor="ac-name">Name (optional)</label>
+              <input id="ac-name" name="full_name" className="input" autoComplete="off" />
+            </div>
+            <div className="field">
+              <label htmlFor="ac-company">Company (optional)</label>
+              <input id="ac-company" name="company" className="input" autoComplete="off" />
+            </div>
+          </div>
+        </ActionForm>
+      </section>
       <form className="inline-form" style={{ maxWidth: 480 }}>
         <input name="q" defaultValue={q} className="input" placeholder="Search name, email or company" aria-label="Search clients" />
         <button className="btn btn-ghost btn-sm" type="submit">Search</button>
