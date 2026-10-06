@@ -20,13 +20,7 @@ export async function signIn(_prev: AuthState, form: FormData): Promise<AuthStat
 
   if (!email || !password) return { message: "Enter your email and password." };
 
-  if (!supabaseConfigured) {
-    const cookieStore = await cookies();
-    const isAdmin = /admin/i.test(email) || next.startsWith("/admin");
-    cookieStore.set("nexatelix_demo_role", isAdmin ? "admin" : "customer", { path: "/", maxAge: 86400 * 7 });
-    cookieStore.set("nexatelix_demo_email", email, { path: "/", maxAge: 86400 * 7 });
-    redirect(isAdmin ? "/admin" : next);
-  }
+  if (!supabaseConfigured) return { message: "The client panel isn't connected yet." };
 
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword({ email, password });
@@ -35,13 +29,6 @@ export async function signIn(_prev: AuthState, form: FormData): Promise<AuthStat
     return { message: "That email and password don't match. Try again or reset your password." };
   }
   redirect(next);
-}
-
-export async function demoLogin(role: "customer" | "admin"): Promise<void> {
-  const cookieStore = await cookies();
-  cookieStore.set("nexatelix_demo_role", role, { path: "/", maxAge: 86400 * 7 });
-  cookieStore.set("nexatelix_demo_email", role === "admin" ? "admin@nexatelix.com" : "stacy@gmail.com", { path: "/", maxAge: 86400 * 7 });
-  redirect(role === "admin" ? "/admin" : "/app");
 }
 
 export async function signOut(): Promise<void> {

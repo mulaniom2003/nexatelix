@@ -4,8 +4,6 @@ import { createServerClient } from "@supabase/ssr";
 /** Refreshes the Supabase session cookie and gates /app and /admin. */
 export async function proxy(request: NextRequest) {
   let response = NextResponse.next({ request });
-  const demoRole = request.cookies.get("nexatelix_demo_role")?.value;
-  if (demoRole) return response;
 
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
