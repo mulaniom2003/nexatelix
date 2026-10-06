@@ -27,7 +27,10 @@ export async function proxy(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   const path = request.nextUrl.pathname;
-  if (!user && (path.startsWith("/app") || path.startsWith("/admin"))) {
+  // /app sends logged-out users to the login page.
+  // /admin is intentionally NOT redirected here — it falls through to the admin
+  // guard which returns 404 for anyone who isn't a signed-in admin, hiding it.
+  if (!user && path.startsWith("/app")) {
     const to = request.nextUrl.clone();
     to.pathname = "/login";
     to.searchParams.set("next", path);

@@ -1,5 +1,5 @@
 import "server-only";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { createAdminClient, createClient, supabaseConfigured } from "./supabase/server";
 import { fallbackPrices, type PriceRow } from "./site";
 
@@ -36,9 +36,11 @@ export async function requireUser() {
 }
 
 export async function requireAdmin() {
-  const s = await requireUser();
-  if (s.profile.role !== "admin") redirect("/app");
-  return s;
+  // Hide the admin area entirely: anyone who is not a signed-in admin gets a 404,
+  // so outsiders can't even tell /admin exists.
+  const { user, profile } = await getSession();
+  if (!user || !profile || profile.role !== "admin" || profile.suspended) notFound();
+  return { user, profile };
 }
 
 export async function getPrices(): Promise<PriceRow[]> {
