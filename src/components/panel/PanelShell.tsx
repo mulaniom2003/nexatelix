@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { Logo, Icon } from "../icons";
 import { PanelNav, type NavItem } from "./PanelNav";
+import { MobileNav } from "./MobileNav";
 import { signOut } from "@/app/auth/actions";
 import { money } from "@/lib/format";
 
@@ -51,6 +52,7 @@ export function PanelShell({
       </aside>
       <div className="pmain">
         <header className="ptop">
+          <MobileNav items={items} isAdmin={isAdmin} area={area} />
           {balance != null ? (
             <Link href="/app/wallet" className="pbal" aria-label="Wallet">
               <span className="muted">Balance</span>

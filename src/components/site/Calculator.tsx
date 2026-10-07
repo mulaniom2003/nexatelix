@@ -27,7 +27,7 @@ export function Calculator({ prices }: { prices: PriceRow[] }) {
       <div className="calc-in">
         <div className="field">
           <label>Channel</label>
-          <div className="seg" role="tablist" aria-label="Channel">
+          <div className="seg seg--fill" role="tablist" aria-label="Channel">
             {ORDER.map((k) => (
               <button
                 key={k}
